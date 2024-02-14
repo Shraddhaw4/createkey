@@ -1,21 +1,24 @@
 
 pipeline {
     agent any
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('shraddha-creds').accessKey
+        AWS_SECRET_ACCESS_KEY =  credentials('shraddha-creds').secretKey
+        AWS_DEFAULT_REGION = 'ap-south-1'
+        AWS_USER_NAME = 'Shraddha'
+    }
     stages {
-        stage('Rotate AWS Access keys') {
+        stage('Get old access key') {
             steps {
                 script {
-                    def iamUser = 'Shraddha'
-                    def awsRegion = 'ap-south-1'
- 
-                    def newAccessKeyOutput = sh (script: "aws iam create-access-key --user-name ${iamUser} --region ${awsRegion}", returnStdout: true).trim()
-                    println(newAccessKeyOutput)
-                    def newAccessKeyId = newAccessKeyOutput.split('"AccessKeyId": "')[1].split('"')[0]
-                    println(newAccessKeyId)
-                    def newSecretAccessKey = newAccessKeyOutput.split('"SecretAccessKey": "')[1].split('"')[0]
-                    println(newSecretAccessKey)
+                    def listKeys = sh (script: "aws iam list-access-key --user-name ${AWS_USER_NAME} --region ${AWS_DEFAULT_REGION}", returnStdout: true).trim()
+                    def oldAccessKey = sh (script: "echo \$listKeys | jq -r '.AccessKeyMetadata[0]?.AccessKeyId'", returnStdout: true).trim()
+                    if (!oldAccessKey) {
+                        error("Failed to retrieve old access key")
                     }
                 }
             }
         }
     }
+}
+        
