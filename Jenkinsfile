@@ -11,7 +11,7 @@ pipeline {
         stage('Get old access key') {
             steps {
                 script {
-                    def listKeys = sh (script: "aws iam list-access-key --user-name ${AWS_USER_NAME} --region ${AWS_DEFAULT_REGION}", returnStdout: true).trim()
+                    def listKeys = sh (script: "aws iam list-access-keys --user-name ${AWS_USER_NAME} --region ${AWS_DEFAULT_REGION}", returnStdout: true).trim()
                     def oldAccessKey = sh (script: "echo \$listKeys | jq -r '.AccessKeyMetadata[0]?.AccessKeyId'", returnStdout: true).trim()
                     if (!oldAccessKey) {
                         error("Failed to retrieve old access key")
