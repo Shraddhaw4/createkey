@@ -29,7 +29,7 @@ pipeline {
                             def newSecretAccessKey = newAccessKeyOutput.split('"SecretAccessKey": "')[1].split('"')[0]
                             println(newSecretAccessKey)
                             if (newAccessKeyId) {
-                              sh "aws iam delete-access-key --user-name ${AWS_USER_NAME} --access-key-id ${newAccessKeyId}"
+                              sh "aws iam delete-access-key --user-name ${AWS_USER_NAME} --access-key-id ${oldAccessKeyId}"
                            }
                   }
             }
