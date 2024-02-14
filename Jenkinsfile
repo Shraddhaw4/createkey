@@ -4,7 +4,6 @@ pipeline {
     environment {
         AWS_DEFAULT_REGION = 'ap-south-1'
         AWS_USER_NAME = 'Shraddha'
-        oldAccessKeyId = ''
     }
     stages {
         stage('Get old access key') {
@@ -18,9 +17,9 @@ pipeline {
                     ]]) {
                             def listKeys = sh (script: "aws iam list-access-keys --user-name ${AWS_USER_NAME}", returnStdout: true).trim()
                             println(listKeys)
-                            env.oldAccessKeyId = listKeys.split('"AccessKeyId": "')[1].split('"')[0]
-                            println("${env.oldAccessKeyId}")
-                            if (!env.oldAccessKeyId) {
+                            oldAccessKeyId = listKeys.split('"AccessKeyId": "')[1].split('"')[0]
+                            println(oldAccessKeyId)
+                            if (!oldAccessKeyId) {
                                 error("Failed to retrieve old access key")
                             }
                         }
