@@ -1,7 +1,4 @@
-import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
-import jenkins.model.Jenkins
-import groovy.json.JsonSlurper
-import net.sf.json.JSONObject
+
 pipeline {
     agent any
     stages {
