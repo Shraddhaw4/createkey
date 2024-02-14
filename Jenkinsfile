@@ -12,6 +12,7 @@ pipeline {
             steps {
                 script {
                     def listKeys = sh (script: "aws iam list-access-keys --user-name ${AWS_USER_NAME}", returnStdout: true).trim()
+                    println(listKeys)
                     def oldAccessKey = sh (script: "echo \$listKeys | jq -r '.AccessKeyMetadata[0]?.AccessKeyId'", returnStdout: true).trim()
                     if (!oldAccessKey) {
                         error("Failed to retrieve old access key")
