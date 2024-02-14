@@ -2,7 +2,7 @@
 pipeline {
     agent any
     environment {
-        AWS_ACCESS_KEY_ID = credentials('shraddha-creds').accessKey
+        AWS_ACCESS_KEY_ID = credentials('shraddha-creds')
         AWS_SECRET_ACCESS_KEY =  credentials('shraddha-creds').secretKey
         AWS_DEFAULT_REGION = 'ap-south-1'
         AWS_USER_NAME = 'Shraddha'
