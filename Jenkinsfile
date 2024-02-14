@@ -11,7 +11,7 @@ pipeline {
         stage('Get old access key') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'AWS_credentials', variable: 'AWS_CREDENTIALS')]) {
+                    withCredentials([string(credentialsId: 'AWS_credentials', variable: 'Pass')]) {
                         def listKeys = sh (script: "aws iam list-access-keys --user-name ${AWS_USER_NAME}", returnStdout: true).trim()
                         println(listKeys)
                         def oldAccessKeyId = listKeys.split('"AccessKeyId": "')[1].split('"')[0]
