@@ -11,14 +11,17 @@ pipeline {
         stage('Get old access key') {
             steps {
                 script {
-                    def listKeys = sh (script: "aws iam list-access-keys --user-name ${AWS_USER_NAME}", returnStdout: true).trim()
-                    println(listKeys)
-                    def oldAccessKeyId = listKeys.split('"AccessKeyId": "')[1].split('"')[0]
-                    println(oldAccessKeyId)
-                    def oldAccessKey = sh (script: "echo \$listKeys | jq -r '.AccessKeyMetadata[0]?.AccessKeyId'", returnStdout: true).trim()
-                    if (!oldAccessKey) {
-                        error("Failed to retrieve old access key")
+                    withCredentials([string(credentialsId: 'AWS_credentials', variable: 'AWS_CREDENTIALS')]) {
+                        def listKeys = sh (script: "aws iam list-access-keys --user-name ${AWS_USER_NAME}", returnStdout: true).trim()
+                        println(listKeys)
+                        def oldAccessKeyId = listKeys.split('"AccessKeyId": "')[1].split('"')[0]
+                        println(oldAccessKeyId)
+                        def oldAccessKey = sh (script: "echo \$listKeys | jq -r '.AccessKeyMetadata[0]?.AccessKeyId'", returnStdout: true).trim()
+                        if (!oldAccessKey) {
+                            error("Failed to retrieve old access key")
+                        }
                     }
+
                 }
             }
         }
