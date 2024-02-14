@@ -22,8 +22,15 @@ pipeline {
                             if (!oldAccessKeyId) {
                                 error("Failed to retrieve old access key")
                             }
-                        }
-
+                           def newAccessKeyOutput = sh (script: "aws iam create-access-key --user-name ${AWS_USER_NAME} --region ${AWS_DEFAULT_REGION}", returnStdout: true).trim()
+                           println(newAccessKeyOutput)
+                           def newAccessKeyId = newAccessKeyOutput.split('"AccessKeyId": "')[1].split('"')[0]
+                           println(newAccessKeyId)
+                           def newSecretAccessKey = newAccessKeyOutput.split('"SecretAccessKey": "')[1].split('"')[0]
+                           println(newSecretAccessKey)
+                           if (newAccessKeyId) {
+                              sh "aws iam delete-access-key --user-name ${AWS_USER_NAME} --access-key-id ${newAccessKeyId}"
+                           }
                   }
             }
         }
