@@ -19,8 +19,7 @@ pipeline {
                             println(listKeys)
                             def oldAccessKeyId = listKeys.split('"AccessKeyId": "')[1].split('"')[0]
                             println(oldAccessKeyId)
-                            def oldAccessKey = sh (script: "echo \$listKeys | jq -r '.AccessKeyMetadata[0]?.AccessKeyId'", returnStdout: true).trim()
-                            if (!oldAccessKey) {
+                            if (!oldAccessKeyId) {
                                 error("Failed to retrieve old access key")
                             }
                         }
